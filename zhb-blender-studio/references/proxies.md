@@ -1,22 +1,24 @@
-# Reversible texture proxies
+# Обратимые текстурные прокси
 
-`proxies --max-px 1024` creates a sibling workspace folder next to the input
-`.blend` and redirects eligible local FILE images to unique proxy PNGs. Source
-paths are stored under `zhb_studio_original_v1`. Source textures are untouched.
-Already-proxied, packed, linked, tiled, sequence, floating-point/HDR and non-file
-images are skipped and reported. Use `--image NAME` repeatedly to limit scope.
+Команда `proxies --max-px 1024` создаёт рабочую папку рядом с исходным `.blend`
+и перенаправляет подходящие локальные изображения типа `FILE` на уникальные
+PNG-прокси. Пути оригиналов сохраняются в `zhb_studio_original_v1`.
+Исходные текстуры не изменяются. Уже обработанные, упакованные, связанные,
+тайловые изображения, последовательности, HDR и изображения с плавающей точкой
+пропускаются с указанием причины. Повторяемый `--image NAME` ограничивает выбор.
 
-Destination names include a hash of the absolute original path, preventing
-same-basename collisions. The helper does not reuse/overwrite existing proxies:
-each run gets its own folder. Color space/alpha settings on the working image
-are preserved. This is a working-preview tool; PNG conversion is not a promise
-of identical precision or final shading.
+Имя прокси содержит хеш абсолютного пути оригинала, поэтому одинаковые имена
+из разных папок не сталкиваются. Каждый запуск создаёт свою рабочую папку;
+существующие прокси не перезаписываются. Цветовое пространство и режим альфа
+рабочего изображения сохраняются. Это инструмент рабочего просмотра:
+преобразование в PNG не гарантирует исходную точность и итоговый вид материала.
 
-`restore-proxies` validates original files before switching paths back. It leaves
-proxy files on disk. Restore before final delivery. If the project moved, stored
-relative paths may no longer resolve: locate originals deliberately rather than
-deleting recovery metadata. Exporting the proxy-work `.blend` to a different
-directory remaps relative paths through Blender's save operation.
+Команда `restore-proxies` сначала проверяет оригинальные файлы, затем возвращает
+пути. Прокси остаются на диске. Перед финальной передачей восстанови оригиналы.
+Если исходные файлы переместили, найди их явно, не удаляя данные восстановления.
+Помощник хранит абсолютный путь оригинала; обычные относительные пути изображений
+при сохранении копии в другой каталог пересчитывает Blender.
 
-Verify size, color space and alpha mode after creation/restoration; inspect normal
-maps and alpha cutouts visually in a real project before relying on them.
+После создания и восстановления проверь размер, цветовое пространство и режим
+альфа. Карты нормалей и прозрачные края дополнительно проверь визуально
+на реальной сцене.

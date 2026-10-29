@@ -1,18 +1,23 @@
-# Capability map
+# Карта возможностей
 
-| Area | Shipped behavior | What is not claimed |
+| Направление | Что входит | Ограничения |
 |---|---|---|
-| Project setup | Helper: explicit resolution, FPS, frames, engine. Agent guidance: color/compositor and crop decisions. | No fixed studio look, preset library or general render-settings transfer tool. |
-| Scene diagnostics | Helper: counts, settings, ordinary missing paths, heavy candidates and proxy state. | No evaluated triangle census, duplicate proof or simulation validation. |
-| Cleanup | Agent procedures for exact duplicate checks, shared users and targeted unused IDs. | No automatic dedup/purge button or visual-equivalence guarantee. |
-| Proxies | Helper: bounded PNG copies and restoration of local FILE textures. | No HDR/UDIM/sequence proxy conversion. |
-| Variants | Agent procedures for separate files or explicit drivers. | No installed UI, legacy Studio variant migration or render queue. |
-| Collect | Helper: new `.blend`, resources, manifest, extras, fresh-open path check. | No linked-library packaging, exhaustive third-party dependency discovery or cache freshness claim. |
+| Подготовка проекта | Готовый помощник: явно заданные разрешение, частота кадров, диапазон и движок. Инструкции агенту: работа с цветом, композитором и кадрированием. | Нет обязательного лука, библиотеки пресетов и универсального переноса настроек рендера между сценами. |
+| Диагностика сцены | Готовый помощник: количество данных, настройки, отсутствующие файлы, кандидаты на дополнительную проверку и состояние прокси. | Нет полного подсчёта вычисленной геометрии, доказательства идентичности дублей и проверки симуляций. |
+| Чистка | Сценарий для агента: точная проверка дублей, учёт пользователей общих данных и целевое удаление неиспользуемых блоков. | Нет автоматической кнопки объединения или удаления и гарантии визуальной эквивалентности. |
+| Текстурные прокси | Готовый помощник: уменьшенные PNG-копии обычных локальных файловых текстур и возврат оригиналов. | Прокси для HDR, UDIM и последовательностей не создаются; упакованные и связанные изображения пропускаются. |
+| Варианты сцены | Сценарий для агента: отдельные файлы или явные драйверы для переключения видимости и значений. | Нет устанавливаемой панели, переноса старых вариантов Studio и очереди рендера. |
+| Сборка проекта | Готовый помощник: новая копия `.blend`, ресурсы, манифест, дополнительные файлы и проверка путей отдельным Blender. Команда — `collect`. | Нет упаковки внешних связанных библиотек, исчерпывающего поиска зависимостей сторонних аддонов и проверки свежести кэшей. |
 
-Not included: autosave timers/snapshot management, permanent viewport overlays,
-shader conversion, relink search, Draft/Final rendering, Sample Test, Frame
-Analysis, Camera Rig, animation, physics, crowds, asset-library administration
-or After Effects export. These are not prerequisites.
+## Что не входит
 
-The package is a reusable agent skill with helper scripts, not a Blender extension
-and not a complete replacement for every historical zhb Studio function.
+- Фоновое автосохранение и управление снимками версий.
+- Постоянные направляющие и оверлеи в окне просмотра.
+- Преобразование шейдеров и поиск замен потерянных файлов.
+- Черновой и финальный рендер, тест сэмплов и анализ кадра.
+- Риг камеры, анимация, физика и толпа.
+- Администрирование библиотеки ассетов и экспорт в After Effects.
+
+Для работы скилла эти функции и аддоны не нужны. Это инструкции для агента
+с готовыми помощниками, а не расширение Blender и не полная замена всех
+исторических функций zhb Studio.

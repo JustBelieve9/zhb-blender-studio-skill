@@ -1,35 +1,37 @@
-# Deliberate cleanup
+# Осмысленная чистка
 
-This is an agent workflow, not an automatic merge script. Start with a proposed
-plan containing resource type, exact names, users, proposed survivor and reason.
-Work in a saved copy. Restrict the operation to the agreed resource scope.
+Это сценарий для агента, а не автоматический скрипт объединения. Сначала составь
+план: тип ресурса, точные имена, пользователи данных, что предлагается оставить
+и почему. Работай с сохранённой копией в согласованной области данных.
 
-## Duplicate candidates
+## Кандидаты в дубли
 
-Names with `.001` are only candidates. For images compare original bytes plus
-color space, alpha mode, source mode and usage. Ignore different file paths as
-an equality criterion. For meshes compare exact coordinates/topology, edges,
-polygon boundaries, UVs, normals where relevant, all attributes and their values,
-material slots/indices and shape keys. Skip animated or linked data unless its
-semantics are explicitly understood. For materials and node groups compare node
-settings, exact socket values, links by node identity, group interfaces and nested
-dependencies. Matching node types alone does not establish matching topology.
+Суффикс `.001` указывает только на кандидата. У изображений сравни исходные байты,
+цветовое пространство, режим альфа-канала, тип источника и использование.
+Разные пути сами по себе ничего не говорят об одинаковости содержимого.
+У мешей сравни точные координаты, топологию, рёбра, границы полигонов, UV,
+значимые нормали, все атрибуты и их значения, слоты и индексы материалов,
+ключи формы. Анимированные и связанные данные пропускай, если их поведение
+не изучено явно. У материалов и групп нод сравни настройки, точные значения
+входов, связи с учётом конкретных нод, интерфейсы групп и вложенные зависимости.
+Совпадения типов нод недостаточно для совпадения структуры связей.
 
-If exact equivalence cannot be established, keep the resources separate. Never
-round values to force a match. If implementing a reusable fingerprint later,
-test non-equivalent graphs/meshes as well as identical examples.
+Если точная эквивалентность не установлена, оставь ресурсы раздельными.
+Не округляй значения ради совпадения. Если позже появится общий алгоритм
+сравнения, проверь его и на одинаковых, и на заведомо разных графах и мешах.
 
-Once the user has authorized the concrete cleanup scope, remap users and remove
-only verified duplicates. Compare user counts and representative renders. Do not
-convert mesh instances into independent copies accidentally.
+В пределах разрешённой пользователем чистки переназначай пользователей и удаляй
+только проверенные дубли. Сравни количество пользователей и показательные
+рендеры. Не превращай экземпляры одного меша в независимые копии случайно.
 
-## Unused data
+## Неиспользуемые данные
 
-List zero-user IDs first. Preserve Text blocks, intentionally kept assets,
-fake-user data, linked data and user-selected exclusions. A broad recursive
-`orphans_purge()` is not an acceptable substitute for a targeted list when Text
-preservation matters. Recheck users immediately before each removal.
+Сначала перечисли блоки без пользователей. Сохраняй текстовые блоки Text,
+намеренно оставленные ассеты, данные с защитой Fake User, связанные данные
+и выбранные пользователем исключения. Общий рекурсивный `orphans_purge()`
+не заменяет точный список, если нужно сохранить тексты. Непосредственно перед
+удалением ещё раз проверь пользователей каждого блока.
 
-Shader simplification and Principled-to-Diffuse replacement are not bundled
-operations. They change the look and need an explicit visual target, separate
-implementation and before/after review.
+Упрощение шейдеров и замена Principled на Diffuse в пакет не входят. Они меняют
+вид сцены и требуют явной визуальной цели, отдельной реализации и сравнения
+результата до и после.

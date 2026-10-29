@@ -1,10 +1,10 @@
-# Execution
+# Запуск помощников
 
-Locate Blender from the user's environment; do not assume an OS or installation
-path. Locate this skill relative to its own folder. Helpers use Blender's bundled
-Python (`bpy`) and the standard library only. No pip installation is needed.
+Найди Blender в окружении пользователя; не предполагай определённую ОС или путь
+установки. Путь скилла определяй по его собственной папке. Помощники используют
+встроенный Python Blender (`bpy`) и стандартную библиотеку. Установка через pip не нужна.
 
-Background example; replace paths and quote them for the actual shell:
+Примеры фонового запуска. Подставь реальные пути и кавычки для используемой оболочки:
 
 ```text
 blender --background project.blend --python-exit-code 1 --python /path/to/zhb-blender-studio/scripts/studio.py -- report --json /path/to/report.json
@@ -14,12 +14,13 @@ blender --background proxy-work.blend --python-exit-code 1 --python /path/to/zhb
 blender --background project.blend --python-exit-code 1 --python /path/to/zhb-blender-studio/scripts/studio.py -- collect --output /path/to/new-delivery --extra box3d_cache
 ```
 
-Commands print `STUDIO_JSON ` followed by JSON. `--json` on report writes an
-additional report file and refuses to overwrite it. Mutation helpers save only
-to a new `--save` path and refuse the source/existing files. Parent directories
-must exist. `collect` owns its own new output folder.
+Команды выводят маркер `STUDIO_JSON ` и JSON после него. Параметр `--json`
+команды `report` дополнительно записывает новый файл отчёта и не перезаписывает
+существующий. Команды изменения сохраняют только в новый путь `--save`;
+исходник и существующие файлы отклоняются. Родительская папка должна существовать.
+Команда `collect` создаёт свою новую папку результата.
 
-Live execution through any available Blender Python tool:
+Запуск в открытой сессии через доступный инструмент выполнения Python в Blender:
 
 ```python
 import sys
@@ -28,13 +29,16 @@ import studio
 print(studio.report())
 ```
 
-`report`, `prepare`, `make_proxies`, `restore_proxies` can be imported. Mutation
-functions change in-memory data; the caller controls saving. Do not import/run
-Collect in the user's GUI: it deliberately requires background mode.
+Функции `report`, `prepare`, `make_proxies`, `restore_proxies` можно импортировать.
+Функции изменения работают с данными в памяти; сохранением управляет вызывающая
+сторона. Не запускай сборку в пользовательском интерфейсе Blender: она требует
+фонового процесса.
 
-Use `--factory-startup` only for independent scratch tests. A production scene
-may require its existing profile for Geometry Nodes/simulation providers. Use
-`--python-exit-code 1` so exceptions cause a failing shell status.
+`--factory-startup` используй только для независимых тестов на пустых проектах.
+Рабочей сцене может быть нужен существующий профиль для геометрических нод
+и симуляций. `--python-exit-code 1` позволяет отразить исключение кодом ошибки процесса.
 
-Do not construct shell text from untrusted names. Pass argument lists to
-subprocess APIs. CLI `--help` must follow Blender's separator `--`.
+Не составляй текст команды из недоверенных имён. Передавай аргументы списком
+в API запуска процессов. Справка `--help` должна идти после разделителя Blender `--`.
+Имена команд, ключи JSON и идентификаторы API сохранены для совместимости;
+текстовые сообщения помощника переведены на русский.

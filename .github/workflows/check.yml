@@ -1,14 +1,19 @@
-name: Package checks
+name: Проверки пакета
 on: [push, pull_request]
 permissions:
   contents: read
 jobs:
   structure:
+    name: Структура и сборка
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        name: Загрузить репозиторий
       - uses: actions/setup-python@v5
+        name: Подготовить Python
         with:
           python-version: '3.12'
       - run: python tools/check_package.py
+        name: Проверить структуру и ссылки
       - run: python tools/package.py
+        name: Собрать архив

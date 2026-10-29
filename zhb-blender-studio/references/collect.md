@@ -1,38 +1,41 @@
-# Collect: a new delivery folder
+# Сборка проекта в новую папку
 
-Use the saved source file in a fresh background process. The helper creates a
-new directory containing the original `.blend` filename, `resources/`, optional extra caches and
-`manifest.json`. It never saves over the source. Existing destinations are refused.
+Запускай команду `collect` отдельным фоновым процессом на сохранённом исходнике.
+Помощник создаёт новую папку с `.blend` под исходным именем, каталогом `resources/`,
+явно добавленными кэшами и `manifest.json`. Исходник не перезаписывается;
+существующая папка назначения отклоняется.
 
-Before running, identify simulation providers, caches and linked libraries. The
-generic helper cannot infer provider-specific cache freshness. Re-bake/validate
-using available provider tools if the delivery requires it. No zhb Core import
-is attempted. Recipients still need any add-ons required by the scene.
+Перед запуском определи системы симуляции, кэши и связанные библиотеки.
+Общий помощник не определяет свежесть кэшей отдельных аддонов. Если это нужно
+для передачи, проверь или пересчитай их средствами соответствующего аддона.
+Импорт zhb Core не выполняется. Получателю нужны аддоны, от которых зависит сцена.
 
-Supported: local images, sounds, fonts, movie clips, cache-file IDs and volumes
-with ordinary file paths; image UDIM tiles and numbered image sequences;
-already packed resources remain packed. Unpacked movie-clip/volume sequences
-are rejected because copying only one member would produce an incomplete result.
-Linked libraries are rejected rather than left as hidden source dependencies.
-The agent can separately localize a copy if the user wants that tradeoff.
+Поддерживаются локальные изображения, звуки, шрифты, видеоклипы, файловые кэши
+и объёмные данные с обычными путями; UDIM-тайлы изображений и нумерованные
+последовательности изображений. Уже упакованные ресурсы остаются упакованными.
+Неупакованные последовательности видеоклипов и объёмных данных отклоняются:
+копирование одного кадра дало бы неполный результат. Внешние связанные библиотеки
+тоже отклоняются. При необходимости агент отдельно готовит копию с локальными данными.
 
-Extra file/folder resources use repeated `--extra relative/path`. These must stay
-inside the source project directory; they retain the same relative locations in
-the delivery. Include e.g. `box3d_cache` or explicitly identified sidecar caches.
-Reject symlinks/junctions. A provider that derives cache names from the `.blend`
-filename needs deliberate renaming/configuration after the copy, not a blind extra.
+Дополнительные файлы и папки задаются повторяемым `--extra relative/path`.
+Они должны находиться внутри исходной папки проекта и сохраняют относительное
+положение в собранной копии. Так можно включить `box3d_cache` или найденные
+файлы кэша рядом с проектом. Символические ссылки и точки соединения каталогов
+не допускаются. Если аддон выводит имя кэша из имени `.blend`, проверь это правило
+и нужную настройку явно, не полагайся только на копирование дополнительной папки.
 
-Before any copying, all planned resource paths are validated. Then a unique
-staging folder is populated, active proxy paths are restored in memory, copied
-paths are rewritten relative to the new `.blend`, and an independent Blender
-opens the staged copy to validate paths. Failed staging folders are retained
-for inspection and named in the error. Successful staging is renamed to the
-requested destination; no user data is deleted on failure.
+До копирования проверяются все запланированные пути. Затем создаётся уникальная
+временная папка; в памяти восстанавливаются оригинальные текстуры, пути копий
+становятся относительными к новому `.blend`. Отдельный Blender открывает
+временную копию для проверки путей. При ошибке папка остаётся для разбора,
+а её путь указывается в сообщении. При успехе папка получает запрошенное имя.
+Данные пользователя при сбое не удаляются.
 
-`manifest.json` records resources and hashes, extras, verification, and unknown
-cache freshness. No purge, dedup or shader changes happen during Collect.
+В `manifest.json` записываются ресурсы и хеши, дополнительные файлы, результат
+проверки и отметка о непроверенной свежести кэшей. Чистка, объединение дублей
+и изменения шейдеров при сборке не выполняются.
 
-The fresh-open check proves supported paths resolve at that moment. For a strict
-handoff test, reopen after temporarily making the source folder unavailable and
-run the scene's real provider checks. Keep the report honest about unsupported
-custom node paths, custom properties and third-party cache formats.
+Повторное открытие доказывает доступность поддерживаемых путей в момент проверки.
+Для строгого теста передачи временно сделай исходную папку недоступной, открой
+копию и запусти реальные проверки её симуляций. Нестандартные пути в нодах,
+пользовательских свойствах и сторонних кэшах отмечай как непроверенные.

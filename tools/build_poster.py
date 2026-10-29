@@ -1,4 +1,4 @@
-"""Render a minimal, editable SVG and matching PNG feature poster."""
+"""Создать минималистичный постер возможностей в редактируемом SVG и PNG."""
 import argparse
 from html import escape
 from pathlib import Path
@@ -23,7 +23,7 @@ def find_font(explicit, names):
                 candidate = root / name
                 if candidate.is_file():
                     return str(candidate)
-    raise SystemExit("Pass --font and --bold-font for installed Cyrillic-capable fonts")
+    raise SystemExit("Укажите --font и --bold-font: пути к установленным шрифтам с кириллицей")
 
 
 regular = find_font(args.font, ["segoeui.ttf", "DejaVuSans.ttf", "Arial.ttf"])
@@ -33,7 +33,7 @@ im = Image.new("RGB", (1600, 2000), BG)
 draw = ImageDraw.Draw(im)
 svg = ['<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2000" viewBox="0 0 1600 2000" role="img" aria-labelledby="title desc">',
        '<title id="title">ZHB Studio — скилл для Blender</title>',
-       '<desc id="desc">Подготовка проекта, диагностика, чистка, прокси, варианты и Collect. Инструкции и Python-помощники для AI-агента.</desc>',
+       '<desc id="desc">Подготовка проекта, диагностика, чистка, прокси, варианты и сборка проекта. Инструкции и Python-помощники для ИИ-агента.</desc>',
        f'<rect width="1600" height="2000" fill="{BG}"/>']
 
 
@@ -41,9 +41,9 @@ def text(x, y, content, size, fill=INK, weight=False):
     font = ImageFont.truetype(bold if weight else regular, size)
     bbox = draw.textbbox((0, 0), content, font=font)
     if x + bbox[2] - bbox[0] > 1500:
-        raise ValueError(f"Poster text overflows: {content}")
+        raise ValueError(f"Текст постера выходит за границы: {content}")
     draw.text((x, y), content, font=font, fill=fill, anchor="lt")
-    # dominant-baseline=text-before-edge keeps the vector source editable.
+    # Текст в SVG остаётся редактируемым; начало строки привязано к верхнему краю.
     svg.append(f'<text x="{x}" y="{y}" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="{size}" font-weight="{700 if weight else 400}" fill="{fill}">{escape(content)}</text>')
 
 
@@ -53,19 +53,19 @@ def line(y):
 
 
 text(100, 83, "zhb / studio", 42, weight=True)
-text(1230, 94, "AI SKILL  0.1", 25, MUTED)
+text(1230, 94, "СКИЛЛ  0.1.1", 25, MUTED)
 line(169)
 text(94, 245, "Порядок", 136, weight=True)
 text(94, 401, "в Blender-проекте.", 126, weight=True)
 text(100, 586, "От проверки сцены до передачи файлов.", 43, MUTED)
 
 features = [
-    ("Подготовка проекта", "Разрешение, FPS, диапазон и движок.", "ПОМОЩНИК"),
+    ("Подготовка проекта", "Размер, частота кадров, диапазон и движок.", "ПОМОЩНИК"),
     ("Диагностика сцены", "Состав, ресурсы и отсутствующие файлы.", "ПОМОЩНИК"),
     ("Чистка", "Проверка дублей и план удаления лишнего.", "СЦЕНАРИЙ"),
     ("Текстурные прокси", "Рабочие копии с возвратом оригиналов.", "ПОМОЩНИК"),
     ("Варианты сцены", "Отдельные файлы или переключение драйверами.", "СЦЕНАРИЙ"),
-    ("Collect", "Копия проекта, ресурсы и проверка путей.", "ПОМОЩНИК"),
+    ("Сборка проекта", "Копия проекта, ресурсы и проверка путей.", "ПОМОЩНИК"),
 ]
 for index, (title, description, mode) in enumerate(features):
     y = 748 + index * 154
@@ -79,11 +79,11 @@ for index, (title, description, mode) in enumerate(features):
 line(1687)
 text(100, 1765, "Blender 5.2", 36, weight=True)
 text(480, 1765, "Без zhb-аддонов", 36, GREEN, True)
-text(100, 1844, "Инструкции + Python-помощники для AI-агента", 31, MUTED)
+text(100, 1844, "Инструкции + Python-помощники для ИИ-агента", 31, MUTED)
 text(100, 1920, "github.com/JustBelieve9/zhb-blender-studio-skill", 24, MUTED)
 svg.append("</svg>")
 out = ROOT / "media"
 out.mkdir(exist_ok=True)
-(out / "poster.svg").write_text("\n".join(svg) + "\n", encoding="utf-8")
+(out / "poster.svg").write_text("\n".join(svg) + "\n", encoding="utf-8", newline="\n")
 im.save(out / "poster.png", optimize=True)
-print("Poster: media/poster.svg + media/poster.png (1600 x 2000)")
+print("Постер: media/poster.svg и media/poster.png (1600 × 2000)")

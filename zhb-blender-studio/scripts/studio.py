@@ -1,4 +1,4 @@
-"""Standalone Blender project helpers. Run in Blender; see --help after `--`."""
+"""Помощники для Blender-проектов. Запускайте в Blender; справка: --help после `--`."""
 
 import argparse
 import hashlib
@@ -14,7 +14,7 @@ import tempfile
 
 import bpy
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 PROXY_KEY = "zhb_studio_original_v1"
 KINDS = ("images", "sounds", "fonts", "movieclips", "cache_files", "volumes")
 
@@ -28,23 +28,23 @@ def packed(block):
 
 
 def file_set(block, raw):
-    """Expand supported image sets; never silently collect a partial set."""
+    """Развернуть поддерживаемые наборы изображений; не собирать неполный набор молча."""
     path = absolute(raw, block)
     if isinstance(block, bpy.types.Image) and block.source == "TILED":
         if "<UDIM>" not in str(path):
-            raise ValueError(f"{block.name}: tiled image has no <UDIM> pattern")
+            raise ValueError(f"{block.name}: в пути тайлового изображения нет шаблона <UDIM>")
         return [Path(str(path).replace("<UDIM>", str(t.number))) for t in block.tiles]
     if isinstance(block, bpy.types.Image) and block.source == "SEQUENCE":
         match = re.fullmatch(r"(.*?)(\d+)(\.[^.]+)", path.name)
         if not match:
-            raise ValueError(f"{block.name}: cannot identify sequence pattern")
+            raise ValueError(f"{block.name}: не удалось определить шаблон последовательности")
         regex = re.compile(re.escape(match[1]) + r"\d{" + str(len(match[2])) + r"}" + re.escape(match[3]))
         members = sorted(p for p in path.parent.iterdir() if regex.fullmatch(p.name)) if path.parent.is_dir() else []
         if path not in members:
             members.append(path)
         numbers = sorted(int(re.search(r"(\d+)(\.[^.]+)$", p.name)[1]) for p in members)
         if numbers and numbers != list(range(numbers[0], numbers[-1] + 1)):
-            raise ValueError(f"{block.name}: image sequence has gaps")
+            raise ValueError(f"{block.name}: в последовательности изображений есть пропуски")
         return members
     return [path]
 
@@ -60,9 +60,9 @@ def resource_plan(originals=False):
                 continue
             issue = None
             if kind == "movieclips" and block.source == "SEQUENCE":
-                issue = "movie clip sequences need a dedicated collector"
+                issue = "последовательности видеоклипов требуют отдельного сборщика"
             if kind == "volumes" and block.is_sequence:
-                issue = "volume sequences need a dedicated collector"
+                issue = "последовательности объёмных данных требуют отдельного сборщика"
             try:
                 files = file_set(block, raw)
             except (ValueError, OSError) as exc:
@@ -99,23 +99,23 @@ def report():
                           for lib in bpy.data.libraries],
             "heavy_candidates": heavy,
             "proxies": [im.name for im in bpy.data.images if PROXY_KEY in im],
-            "cache_note": "Provider-specific cache freshness and custom resource paths are not checked."}
+            "cache_note": "Свежесть кэшей отдельных аддонов и нестандартные пути ресурсов не проверялись."}
 
 
 def prepare(width=None, height=None, fps=None, start=None, end=None, engine=None):
     sc = bpy.context.scene
     if any(v is not None and not 4 <= v <= 65536 for v in (width, height)):
-        raise ValueError("Resolution must be between 4 and 65536")
+        raise ValueError("Размер изображения должен быть от 4 до 65536 пикселей")
     if fps is not None and (not math.isfinite(fps) or not 1 <= fps <= 32767):
-        raise ValueError("FPS must be between 1 and 32767")
+        raise ValueError("Частота кадров должна быть от 1 до 32767")
     if (start if start is not None else sc.frame_start) > (end if end is not None else sc.frame_end):
-        raise ValueError("Start frame is after end frame")
+        raise ValueError("Начальный кадр не может быть позже конечного")
     for key, value in (("frame_start", start), ("frame_end", end)):
         prop = sc.bl_rna.properties[key]
         if value is not None and not prop.hard_min <= value <= prop.hard_max:
-            raise ValueError(f"{key} is outside Blender's supported range")
+            raise ValueError(f"{key} выходит за допустимый диапазон Blender")
     if engine is not None and engine not in {"BLENDER_EEVEE", "CYCLES", "BLENDER_WORKBENCH"}:
-        raise ValueError("Unsupported engine")
+        raise ValueError("Неподдерживаемый движок")
     if engine is not None:
         sc.render.engine = engine
     for key, value in (("resolution_x", width), ("resolution_y", height)):
@@ -133,22 +133,22 @@ def prepare(width=None, height=None, fps=None, start=None, end=None, engine=None
 
 def make_proxies(max_px=1024, names=None):
     if not bpy.data.filepath:
-        raise ValueError("Save the project before creating proxies")
+        raise ValueError("Перед созданием прокси сохраните проект")
     if not 16 <= max_px <= 16384:
-        raise ValueError("Proxy limit must be between 16 and 16384")
+        raise ValueError("Предел размера прокси должен быть от 16 до 16384 пикселей")
     if names and set(names) - set(bpy.data.images.keys()):
-        raise ValueError("Unknown image name in proxy selection")
+        raise ValueError("В списке изображений для прокси есть неизвестное имя")
     result = {"made": [], "skipped": [], "folder": None}
     for im in list(bpy.data.images):
         if names and im.name not in names:
             continue
         reason = None
         if im.library or packed(im) or im.source != "FILE" or PROXY_KEY in im:
-            reason = "linked, packed, non-FILE or already proxied"
+            reason = "связанное, упакованное, не типа FILE или уже заменено на прокси"
         elif im.is_float:
-            reason = "floating-point/HDR texture"
+            reason = "HDR-текстура или изображение с плавающей точкой"
         elif max(im.size) <= max_px:
-            reason = "already small enough"
+            reason = "размер уже не превышает заданный предел"
         if reason:
             result["skipped"].append({"image": im.name, "reason": reason})
             continue
@@ -179,7 +179,7 @@ def restore_proxies():
     targets = [im for im in bpy.data.images if PROXY_KEY in im]
     for im in targets:
         if not absolute(im[PROXY_KEY], im).is_file():
-            raise FileNotFoundError(f"Original unavailable: {im.name}: {im[PROXY_KEY]}")
+            raise FileNotFoundError(f"Оригинал недоступен: {im.name}: {im[PROXY_KEY]}")
     names = []
     for im in targets:
         im.filepath = im[PROXY_KEY]
@@ -192,9 +192,9 @@ def restore_proxies():
 def new_file(path):
     dst = Path(path).absolute()
     if dst.exists() or not dst.parent.is_dir():
-        raise ValueError(f"Output must be a new file in an existing folder: {dst}")
+        raise ValueError(f"Нужен новый файл в существующей папке: {dst}")
     if bpy.data.filepath and dst.resolve() == Path(bpy.data.filepath).resolve():
-        raise ValueError("Refusing to overwrite the source")
+        raise ValueError("Перезапись исходника запрещена")
     return dst
 
 
@@ -208,38 +208,38 @@ def sha256(path):
 
 def collect(output, extras=()):
     if not bpy.app.background or not bpy.data.filepath:
-        raise ValueError("Collect requires a saved source in a fresh background Blender process")
+        raise ValueError("Сборке нужен сохранённый исходник в отдельном фоновом процессе Blender")
     source = Path(bpy.data.filepath).resolve()
     dest = Path(output).absolute()
     if dest.exists() or not dest.parent.is_dir():
-        raise ValueError("Collect destination must be new, with an existing parent")
+        raise ValueError("Папка сборки должна быть новой, а её родительская папка — существовать")
     if bpy.data.libraries:
-        raise ValueError("Linked libraries require a deliberate localization workflow before Collect")
+        raise ValueError("Перед сборкой нужно отдельно подготовить локальные данные вместо внешних связанных библиотек")
     rows = resource_plan(originals=True)
     problems = [r for r in rows if r["missing"] or r["issue"] or r["linked"]]
     if problems:
-        raise ValueError("Resource preflight failed: " + json.dumps(problems))
+        raise ValueError("Предварительная проверка ресурсов не пройдена: " + json.dumps(problems, ensure_ascii=False))
     extra_plan = []
     reserved = {"resources", "manifest.json", source.name.lower()}
     for raw in extras:
         rel = Path(raw)
         if rel.is_absolute() or ".." in rel.parts or not rel.parts or rel.parts[0].lower() in reserved:
-            raise ValueError(f"Invalid extra relative path: {raw}")
+            raise ValueError(f"Недопустимый относительный путь дополнительного ресурса: {raw}")
         item = source.parent / rel
         if not item.exists() or not item.resolve().is_relative_to(source.parent):
-            raise ValueError(f"Extra must exist inside the source folder: {raw}")
+            raise ValueError(f"Дополнительный ресурс должен существовать внутри исходной папки: {raw}")
         if item.is_dir() and dest.parent.resolve().is_relative_to(item.resolve()):
-            raise ValueError("Collect staging cannot be inside an extra resource directory")
+            raise ValueError("Временная папка сборки не может находиться внутри дополнительного ресурса")
         chain = [source.parent.joinpath(*rel.parts[:i]) for i in range(1, len(rel.parts) + 1)]
         nested = list(item.rglob("*")) if item.is_dir() else []
         if any(p.is_symlink() or p.is_junction() for p in [*chain, *nested]):
-            raise ValueError(f"Extra contains a symlink/junction: {raw}")
+            raise ValueError(f"Дополнительный ресурс содержит символическую ссылку или точку соединения: {raw}")
         if any(item == previous or item in previous.parents or previous in item.parents for previous, _ in extra_plan):
-            raise ValueError(f"Overlapping extra paths: {raw}")
+            raise ValueError(f"Пути дополнительных ресурсов пересекаются: {raw}")
         extra_plan.append((item, rel))
     staging = Path(tempfile.mkdtemp(prefix=".studio-collect-", dir=dest.parent))
     manifest = {"version": VERSION, "blend": source.name, "resources": [], "extras": [],
-                "cache_freshness": "Not checked; validate with the scene's simulation providers."}
+                "cache_freshness": "Не проверено; используйте средства проверки симуляций этой сцены."}
     try:
         restore_proxies()
         for index, row in enumerate(rows):
@@ -271,42 +271,77 @@ def collect(output, extras=()):
                               capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
         lines = [line[len("STUDIO_JSON "):] for line in proc.stdout.splitlines() if line.startswith("STUDIO_JSON ")]
         if proc.returncode or not lines:
-            raise RuntimeError("Fresh-open verification failed: " + (proc.stderr + proc.stdout)[-1500:])
+            raise RuntimeError("Проверка отдельным открытием не пройдена: " + (proc.stderr + proc.stdout)[-1500:])
         verification = json.loads(lines[-1])
         if verification["libraries"] or verification["proxies"] or any(r["missing"] or r["issue"] for r in verification["resources"]):
-            raise RuntimeError("Collected project has unresolved resources")
+            raise RuntimeError("В собранном проекте остались недоступные ресурсы")
         manifest["verification"] = {"fresh_open": True, "supported_paths_resolve": True,
                                     "source_isolation_test": False}
         (staging / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
         staging.rename(dest)
     except Exception as exc:
-        raise RuntimeError(f"Collect failed; staging retained at {staging}: {exc}") from exc
+        raise RuntimeError(f"Сборка не выполнена; временная папка сохранена: {staging}: {exc}") from exc
     return {"output": str(dest), **manifest}
 
 
+class RussianParser(argparse.ArgumentParser):
+    """Русская справка без изменения имён команд и параметров."""
+
+    def __init__(self, *args, **kwargs):
+        kwargs["add_help"] = False
+        super().__init__(*args, **kwargs)
+        self._positionals.title = "команды и аргументы"
+        self._optionals.title = "параметры"
+        self.add_argument("-h", "--help", action="help", help="показать справку и выйти")
+
+    def format_usage(self):
+        return super().format_usage().replace("usage: ", "использование: ")
+
+    def format_help(self):
+        return super().format_help().replace("usage: ", "использование: ")
+
+    def error(self, message):
+        translations = {
+            "the following arguments are required:": "не заданы обязательные аргументы:",
+            "unrecognized arguments:": "неизвестные аргументы:",
+            "invalid choice:": "недопустимое значение:",
+            "choose from": "допустимые значения:",
+            "invalid int value:": "ожидается целое число, получено:",
+            "invalid float value:": "ожидается число, получено:",
+            "expected one argument": "ожидается одно значение",
+            "argument ": "аргумент ",
+        }
+        for source, target in translations.items():
+            message = message.replace(source, target)
+        self.print_usage(sys.stderr)
+        self.exit(2, f"{self.prog}: ошибка: {message}\n")
+
+
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = RussianParser(description=__doc__, prog="studio.py")
     commands = parser.add_subparsers(dest="command", required=True)
-    inspection = commands.add_parser("report")
-    inspection.add_argument("--json")
-    setup = commands.add_parser("prepare")
+    inspection = commands.add_parser("report", help="диагностика сцены и ресурсов")
+    inspection.add_argument("--json", metavar="ФАЙЛ", help="путь нового файла отчёта JSON")
+    setup = commands.add_parser("prepare", help="подготовка параметров проекта")
+    labels = {"width": "ширина в пикселях", "height": "высота в пикселях",
+              "start": "начальный кадр", "end": "конечный кадр"}
     for key in ("width", "height", "start", "end"):
-        setup.add_argument("--" + key, type=int)
-    setup.add_argument("--fps", type=float)
-    setup.add_argument("--engine", choices=["CYCLES", "BLENDER_EEVEE", "BLENDER_WORKBENCH"])
-    proxy = commands.add_parser("proxies")
-    proxy.add_argument("--max-px", type=int, default=1024)
-    proxy.add_argument("--image", action="append")
-    restore = commands.add_parser("restore-proxies")
+        setup.add_argument("--" + key, type=int, metavar="ЧИСЛО", help=labels[key])
+    setup.add_argument("--fps", type=float, metavar="ЧИСЛО", help="частота кадров")
+    setup.add_argument("--engine", choices=["CYCLES", "BLENDER_EEVEE", "BLENDER_WORKBENCH"], help="движок")
+    proxy = commands.add_parser("proxies", help="создание текстурных прокси")
+    proxy.add_argument("--max-px", type=int, default=1024, metavar="ЧИСЛО", help="предел длинной стороны, по умолчанию 1024 пикселя")
+    proxy.add_argument("--image", action="append", metavar="ИМЯ", help="имя изображения; параметр можно повторять")
+    restore = commands.add_parser("restore-proxies", help="возврат оригинальных текстур")
     for command in (setup, proxy, restore):
-        command.add_argument("--save", required=True)
-    delivery = commands.add_parser("collect")
-    delivery.add_argument("--output", required=True)
-    delivery.add_argument("--extra", action="append", default=[])
+        command.add_argument("--save", required=True, metavar="ФАЙЛ", help="путь нового файла .blend")
+    delivery = commands.add_parser("collect", help="сборка проекта для передачи")
+    delivery.add_argument("--output", required=True, metavar="ПАПКА", help="новая папка результата")
+    delivery.add_argument("--extra", action="append", default=[], metavar="ПУТЬ", help="относительный путь дополнительного ресурса")
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
     save = new_file(args.save) if hasattr(args, "save") else None
     if save and save.suffix.lower() != ".blend":
-        raise ValueError("--save must name a new .blend file")
+        raise ValueError("--save должен указывать новый файл .blend")
     if args.command == "report":
         result = report()
         if args.json:

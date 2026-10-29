@@ -1,25 +1,26 @@
-# Variants without a permanently installed add-on
+# Варианты без постоянно установленного аддона
 
-Use a copy-per-variant approach when a few deliverables differ substantially.
-Record explicit differences, apply them in a separate process per copy and save
-new `.blend` files. This is easier to reverse than a hidden driver network.
+Если версий немного или они сильно различаются, используй отдельный файл
+на вариант. Зафиксируй точные отличия, применяй их отдельным процессом
+к каждой копии и сохраняй новые `.blend`.
 
-For many versions of one scene, a shared integer custom property such as
-`scene["studio_variant"]` can drive object visibility and numeric values. Agree
-variant names/indices first; preserve the index mapping and never renumber it
-silently. Do not overwrite existing drivers, keyframes, constraints or expressions.
+Для множества версий одной сцены можно использовать общее целочисленное
+свойство, например `scene["studio_variant"]`, и драйверы видимости и числовых
+значений. Сначала согласуй названия и индексы; сохраняй соответствие и не меняй
+нумерацию молча. Не перезаписывай существующие драйверы, ключи, ограничения и выражения.
 
-Create a `SINGLE_PROP` driver variable targeting the scene property. Expressions
-like `v != 0` can control `hide_render`; numeric variants can use explicit
-conditional expressions. Check each driven RNA path, array index and referenced
-ID. Enum fields and material datablock pointers are not ordinary numeric driver
-targets; use node switches/mixes or separate saved files where appropriate.
+Создай переменную драйвера `SINGLE_PROP`, указывающую на свойство сцены.
+Выражение `v != 0` может управлять `hide_render`; числовые версии задаются
+явными условными выражениями. Проверяй каждый путь RNA, индекс массива
+и объект данных. Поля-перечисления и ссылки на материалы не являются обычными
+числовыми целями драйвера: при необходимости используй переключатели и смешивание
+в нодах или отдельные сохранённые файлы.
 
-Visibility must account for the user's collections/view layers and intended
-viewport behavior. A hidden collection can defeat object visibility drivers.
-For a temporary preview record and restore the original variant and frame.
+Учитывай коллекции, слои просмотра и ожидаемое поведение видимости. Скрытая
+коллекция может перекрыть действие драйвера объекта. Для временного предпросмотра
+запиши исходный вариант и кадр и восстанови их после проверки.
 
-Verification: switch through every variant, update the depsgraph, inspect the
-requested differences and unchanged shared parts, save/reopen the file and test
-background evaluation. No GV Variants or Studio UI is installed by this skill.
-Rendering/queues are outside this skill's scope.
+Проверка: переключи все варианты, обнови граф зависимостей, проверь запрошенные
+отличия и общие части, сохрани и открой файл снова, проверь фоновое вычисление.
+Скилл не устанавливает интерфейс GV Variants или Studio. Рендер и очередь
+заданий находятся за пределами его задач.

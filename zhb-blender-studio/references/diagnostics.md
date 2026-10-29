@@ -1,25 +1,37 @@
-# Scene diagnostics
+# Диагностика сцены
 
-Run `studio.report()` first only when inspection is requested or needed for the
-authorized task. It reports the active scene's objects and render properties;
-resource counts and paths are file-wide. It does not evaluate all geometry,
-re-bake simulations, compare duplicates or estimate render time.
+Запускай `studio.report()`, когда проверка запрошена или нужна для разрешённой
+задачи. Отчёт содержит объекты и настройки активной сцены; количество ресурсов
+и пути относятся ко всему файлу. Помощник не вычисляет всю геометрию,
+не пересчитывает симуляции, не сравнивает дубли и не оценивает время рендера.
 
-Read the JSON fields: `scene`, `settings`, `scene_objects`, `datablocks`,
-`resources`, `libraries`, `heavy_candidates`, `proxies`, `cache_note`.
-Candidates such as subdivision level > 2, bump or displacement are reasons to
-inspect, not automatically defects. Large textures may be necessary for output.
+## Поля отчёта
 
-For a deeper requested report:
+| Поле JSON | Содержимое |
+|---|---|
+| `scene` | Имя активной сцены |
+| `settings` | Размер, частота кадров, диапазон, движок и цвет |
+| `scene_objects` | Количество объектов активной сцены |
+| `datablocks` | Количество блоков данных во всём файле |
+| `resources` | Пути ресурсов, отсутствующие файлы и замечания |
+| `libraries` | Связанные библиотеки и доступность файлов |
+| `heavy_candidates` | Данные для дополнительной проверки нагрузки |
+| `proxies` | Изображения с активной заменой на прокси |
+| `cache_note` | Ограничения проверки кэшей |
 
-- Evaluate instances with the depsgraph, distinguishing unique meshes from
-  per-instance triangle totals. State if expensive geometry was sampled.
-- Check missing UDIM tiles and sequence members, not only the first file.
-- Inspect external library paths relative to the library owning the datablock.
-- Discover the scene's actual simulation providers. Use their documented cache
-  validators when available; a file's existence is not a freshness test.
-- Compare against requirements explicitly supplied for this project. There is
-  no built-in Goodville, 1920², 100 mm or color-management canon.
+Subdivision выше уровня 2, Bump и Displacement — причины присмотреться, а не
+доказанные дефекты. Большие текстуры могут быть нужны для итогового изображения.
 
-Present the material findings and proposed next actions. Do not launch cleanup
-because a report contains warnings.
+Если пользователь просит более глубокий разбор:
+
+- Вычисляй экземпляры через граф зависимостей, различая уникальные меши
+  и сумму треугольников по экземплярам. Если геометрия проверена выборочно, укажи это.
+- Проверяй отсутствующие UDIM-тайлы и кадры последовательностей, не только первый файл.
+- Разрешай внешние пути относительно библиотеки, которой принадлежат данные.
+- Определи реальные системы симуляции. Используй их документированные проверки:
+  существование файла не доказывает свежесть кэша.
+- Сравнивай с требованиями конкретного проекта. Обязательных настроек Goodville,
+  1920², объектива 100 мм или определённого управления цветом нет.
+
+Покажи существенные находки и предложенные действия. Замечания в отчёте сами
+по себе не дают основания запускать чистку.

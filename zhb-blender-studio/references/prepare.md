@@ -1,19 +1,20 @@
-# Prepare a project
+# Подготовка проекта
 
-`prepare` supports explicit width, height, FPS, first/last frame and engine
-(`CYCLES`, `BLENDER_EEVEE`, `BLENDER_WORKBENCH`). Unspecified fields stay as they
-are. Fractional FPS is represented through `fps` and `fps_base`.
+Команда `prepare` принимает явные ширину, высоту, частоту кадров, начальный
+и конечный кадр, движок (`CYCLES`, `BLENDER_EEVEE`, `BLENDER_WORKBENCH`).
+Неуказанные поля сохраняются. Дробная частота кадров задаётся через `fps` и `fps_base`.
 
-For color management, samples, output format and compositor, the agent reads
-the actual Blender properties, proposes the requested values and applies only
-those values. Preserve user node graphs and artist-tuned lights/worlds. Appending
-foreign compositor templates may also append unwanted scenes: inspect references.
+Для управления цветом, количества сэмплов, формата вывода и композитора агент
+читает реальные свойства Blender и применяет запрошенные значения. Сохраняй
+существующие графы нод и вручную настроенные свет и мир. При добавлении чужого
+шаблона композитора могут подтянуться лишние сцены: проверяй ссылки на данные.
 
-Transferring settings between scenes is not included in the helper. If explicitly
-requested, first enumerate the selected property groups and compare source/target
-before implementing a scene-specific transfer. Do not copy the whole scene blindly.
+Перенос настроек между сценами в помощник не включён. Если он явно запрошен,
+сначала перечисли нужные группы свойств и сравни источник с назначением,
+затем реализуй перенос для этого случая. Не копируй всю сцену вслепую.
 
-Crop guides: for an explicitly chosen master and target sizes, compute centered
-rectangles and their intersection. A composited guide is visible in output;
-camera viewport guides are not. Ask which is intended when ambiguous. Do not
-silently embed a grid in final images. No grid image or draw handler is bundled.
+Направляющие кадрирования: для заданного мастера и целевых размеров вычисли
+центральные прямоугольники и их пересечение. Сетка в композиторе попадает
+в изображение, направляющие окна камеры — нет. Если запрос неоднозначен,
+уточни нужный способ. Не добавляй сетку в финальные изображения молча.
+Готового изображения сетки и постоянного обработчика отрисовки в пакете нет.

@@ -1,4 +1,4 @@
-"""Integration checks on generated scratch files, never the user's projects."""
+"""Интеграционные проверки на созданных тестовых файлах, без проектов пользователя."""
 
 import hashlib
 import importlib.util
@@ -39,7 +39,7 @@ class StudioChecks(unittest.TestCase):
             im = bpy.data.images.load(str(directory / "same-name.png"), check_existing=False)
             im.use_fake_user = True
             self.images.append(im)
-        bpy.data.texts.new("Keep this script").write("important project notes")
+        bpy.data.texts.new("Сохранить этот текст").write("важные заметки проекта")
         (self.source / "cache").mkdir()
         (self.source / "cache" / "frame.cache").write_bytes(b"cache fixture")
         bpy.ops.wm.save_as_mainfile(filepath=str(self.blend))
@@ -174,5 +174,5 @@ class StudioChecks(unittest.TestCase):
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(StudioChecks)
 result = unittest.TextTestRunner(verbosity=2).run(suite)
 if not result.wasSuccessful():
-    raise RuntimeError("Studio integration tests failed")
+    raise RuntimeError("Интеграционные проверки Studio не пройдены")
 print(f"STUDIO_TESTS_PASSED {result.testsRun}")
