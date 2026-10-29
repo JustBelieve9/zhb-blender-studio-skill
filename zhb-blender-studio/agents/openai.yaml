@@ -1,0 +1,4 @@
+interface:
+  display_name: "ZHB Studio"
+  short_description: "Подготовка, чистка и сборка Blender-проектов"
+  default_prompt: "Используй $zhb-blender-studio, чтобы проверить проект и подготовить копию для передачи."

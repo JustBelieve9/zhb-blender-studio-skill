@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+dist/
+.test-profile/
+*.blend
+*.blend1
+*.log

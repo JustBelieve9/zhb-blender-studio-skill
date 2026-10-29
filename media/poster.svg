@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2000" viewBox="0 0 1600 2000" role="img" aria-labelledby="title desc">
+<title id="title">ZHB Studio — скилл для Blender</title>
+<desc id="desc">Подготовка проекта, диагностика, чистка, прокси, варианты и Collect. Инструкции и Python-помощники для AI-агента.</desc>
+<rect width="1600" height="2000" fill="#F6F6F0"/>
+<text x="100" y="83" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="42" font-weight="700" fill="#19221C">zhb / studio</text>
+<text x="1230" y="94" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="25" font-weight="400" fill="#5B665E">AI SKILL  0.1</text>
+<path d="M100 169H1500" stroke="#CDD4CA" stroke-width="2"/>
+<text x="94" y="245" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="136" font-weight="700" fill="#19221C">Порядок</text>
+<text x="94" y="401" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="126" font-weight="700" fill="#19221C">в Blender-проекте.</text>
+<text x="100" y="586" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="43" font-weight="400" fill="#5B665E">От проверки сцены до передачи файлов.</text>
+<path d="M100 727H1500" stroke="#CDD4CA" stroke-width="2"/>
+<rect x="100" y="750" width="64" height="60" rx="12" fill="#D6E8D8"/>
+<text x="114" y="765" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="26" font-weight="700" fill="#155B3D">01</text>
+<text x="208" y="748" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="45" font-weight="700" fill="#19221C">Подготовка проекта</text>
+<text x="210" y="817" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="32" font-weight="400" fill="#5B665E">Разрешение, FPS, диапазон и движок.</text>
+<text x="1280" y="763" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="21" font-weight="400" fill="#155B3D">ПОМОЩНИК</text>
+<path d="M100 881H1500" stroke="#CDD4CA" stroke-width="2"/>
+<rect x="100" y="904" width="64" height="60" rx="12" fill="#D6E8D8"/>
+<text x="114" y="919" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="26" font-weight="700" fill="#155B3D">02</text>
+<text x="208" y="902" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="45" font-weight="700" fill="#19221C">Диагностика сцены</text>
+<text x="210" y="971" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="32" font-weight="400" fill="#5B665E">Состав, ресурсы и отсутствующие файлы.</text>
+<text x="1280" y="917" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="21" font-weight="400" fill="#155B3D">ПОМОЩНИК</text>
+<path d="M100 1035H1500" stroke="#CDD4CA" stroke-width="2"/>
+<rect x="100" y="1058" width="64" height="60" rx="12" fill="#D6E8D8"/>
+<text x="114" y="1073" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="26" font-weight="700" fill="#155B3D">03</text>
+<text x="208" y="1056" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="45" font-weight="700" fill="#19221C">Чистка</text>
+<text x="210" y="1125" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="32" font-weight="400" fill="#5B665E">Проверка дублей и план удаления лишнего.</text>
+<text x="1280" y="1071" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="21" font-weight="400" fill="#155B3D">СЦЕНАРИЙ</text>
+<path d="M100 1189H1500" stroke="#CDD4CA" stroke-width="2"/>
+<rect x="100" y="1212" width="64" height="60" rx="12" fill="#D6E8D8"/>
+<text x="114" y="1227" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="26" font-weight="700" fill="#155B3D">04</text>
+<text x="208" y="1210" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="45" font-weight="700" fill="#19221C">Текстурные прокси</text>
+<text x="210" y="1279" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="32" font-weight="400" fill="#5B665E">Рабочие копии с возвратом оригиналов.</text>
+<text x="1280" y="1225" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="21" font-weight="400" fill="#155B3D">ПОМОЩНИК</text>
+<path d="M100 1343H1500" stroke="#CDD4CA" stroke-width="2"/>
+<rect x="100" y="1366" width="64" height="60" rx="12" fill="#D6E8D8"/>
+<text x="114" y="1381" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="26" font-weight="700" fill="#155B3D">05</text>
+<text x="208" y="1364" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="45" font-weight="700" fill="#19221C">Варианты сцены</text>
+<text x="210" y="1433" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="32" font-weight="400" fill="#5B665E">Отдельные файлы или переключение драйверами.</text>
+<text x="1280" y="1379" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="21" font-weight="400" fill="#155B3D">СЦЕНАРИЙ</text>
+<path d="M100 1497H1500" stroke="#CDD4CA" stroke-width="2"/>
+<rect x="100" y="1520" width="64" height="60" rx="12" fill="#D6E8D8"/>
+<text x="114" y="1535" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="26" font-weight="700" fill="#155B3D">06</text>
+<text x="208" y="1518" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="45" font-weight="700" fill="#19221C">Collect</text>
+<text x="210" y="1587" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="32" font-weight="400" fill="#5B665E">Копия проекта, ресурсы и проверка путей.</text>
+<text x="1280" y="1533" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="21" font-weight="400" fill="#155B3D">ПОМОЩНИК</text>
+<path d="M100 1687H1500" stroke="#CDD4CA" stroke-width="2"/>
+<text x="100" y="1765" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="36" font-weight="700" fill="#19221C">Blender 5.2</text>
+<text x="480" y="1765" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="36" font-weight="700" fill="#155B3D">Без zhb-аддонов</text>
+<text x="100" y="1844" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="31" font-weight="400" fill="#5B665E">Инструкции + Python-помощники для AI-агента</text>
+<text x="100" y="1920" dominant-baseline="text-before-edge" font-family="Segoe UI, DejaVu Sans, sans-serif" font-size="24" font-weight="400" fill="#5B665E">github.com/JustBelieve9/zhb-blender-studio-skill</text>
+</svg>
